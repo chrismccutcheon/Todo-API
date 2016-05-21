@@ -10,7 +10,7 @@ var todos = [];
 app.use(bodyParser.json());
 
 app.get('/', function(req, res){
-  res.send('Todo API root')
+  res.send('Todo API root');
 });
 
 //Get /todos
@@ -42,6 +42,18 @@ app.post('/todos', function(req, res){
   ++todoNextId;
   todos.push(body);
   res.json(body);
+});
+// DELETE /todos/:id
+
+app.delete('/todos/:id', function(req, res){
+  var todoId = parseInt(req.params.id, 10);
+  var matched = _.findWhere(todos, {id: todoId});
+  if(!matched){
+    res.send(404).json({"error": "no todo found"});
+  } else {
+    todos = _.without(todos, matched);
+    res.json(matched);
+  }
 });
 
 app.listen(PORT, function(){
